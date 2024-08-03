@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Acesso de membros</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
+      margin: 0;
+      padding: 0;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 15px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    p {
+      color: #666;
+    }
+
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    ul li {
+      margin-bottom: 10px;
+    }
+
+    a {
+      text-decoration: none;
+      color: #007bff;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    #unlockPage {
+      margin-top: 50px;
+      padding: 20px;
+      background-color: #000;
+      color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    textarea {
+      width: 100%;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    input[type="text"] {
+      width: calc(100% - 130px);
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    .message {
+      background-color: #f9f9f9;
+      padding: 10px;
+      border-radius: 5px;
+      margin-bottom: 10px;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Bem-vindo ao site de membros do canal!</h1>
+
+  <div id="pinwheelPage">
+    <button onclick="retrieveOrGeneratePin()" style="background-color: #007bff;">Obter Código PINWHEEL</button>
+    <p><a href="https://nubank.com.br/cobrar/tezyu/66a967dc-b24e-4867-ad76-368c97f553e3" target="_blank">REALIZAR PIX</a></p>
+    <p>Para enviar mensagens na página de membros, realize o PIX e envie seu PINWHEEL junto com o comprovante de pagamento para a nossa equipe!</p>
+    <h4>Aqui você recebe 25% do que pagou sempre que um usuário envia seu código! Convide amigos.</h4>
+    <h4>Informações adicionais:<h4/>
+     
+      <p>•🤓☝️ Você terá acesso à página de membros até o dia 29, e poderá assistir aos videos de modo antecipado.</p>
+      <p>•🫂 Envie uma mensagem escrevendo o código do seu amigo que lhe indicou o site, e seu amigo receberá R$5,00 ao informar a equipe que você enviou mensagem.</p>
+      <p>•♾️ Se você não obteu lucro após 1 mês, contate-nos para reembolsarmos entregando até 3% de juros!</p>
+  </div>
+
+  <div id="unlockPage" class="hidden">
+    <h2>Seu Código: <span id="userPin"></span></h2>
+    <h2>Links Desbloqueados</h2>
+    <ul>
+      <li><a href="https://youtube.com/@steinshop?si=tj4tfHpdMKH0uyhH" target="_blank">Acesse nosso canal do youtube clicando aqui</a></li>
+      <li><a href="https://steinshop.com.br/" target="_blank">Visite a loja</a></li>
+    </ul>
+    <p>Parabéns! Agora você tem acesso à página de membros até o dia 29.</p>
+    <button onclick="like()" style="background-color: #007bff;">Curtir <span id="likeCount">0</span></button>
+    <div id="messageSection">
+      <h2>Enviar Mensagem</h2>
+      <h3>Coloque o Código do seu amigo. Você só pode enviar uma mensagem por mês, e não pode colocar o próprio código.</h3>
+      <p>ATENÇÃO: NÃO ENVIE MENSAGEM DIA 29, POIS TODAS AS MENSAGENS SÃO EXCLUÍDAS DIA 29</p>
+      <textarea id="messageInput" rows="4" placeholder="Digite sua mensagem"></textarea>
+      <button onclick="sendMessage()" style="background-color: #007bff;">Enviar</button>
+    </div>
+    <div id="searchSection">
+      <h2>Pesquisar Mensagens do Usuário:</h2>
+      <input type="text" id="searchInput" placeholder="Código do Usuário">
+      <button onclick="searchUser()" style="background-color: #007bff;">Pesquisar Usuário</button>
+      <div id="userMessages"></div>
+    </div>
+    <div id="searchMessagesSection">
+      <h2>Pesquisar Mensagens com o Código:</h2>
+      <input type="text" id="searchMessagesInput" placeholder="Digite uma palavra-chave">
+      <button onclick="searchMessages()" style="background-color: #007bff;">Pesquisar Mensagens</button>
+      <div id="foundMessages"></div>
+    </div>
+    <div id="allowedPinsSection">
+      <h2>PINWHEELS Permitidos:</h2>
+      <ul id="allowedPinsList"></ul>
+    </div>
+    <div id="messageCountsSection">
+      <h2>Contagem de Mensagens:</h2>
+      <ul id="messageCountsList"></ul>
+    </div>
+  </div>
+
+  <p><a id="whatsappLink" href="#" style="background-color: #007bff; color: white; padding: 10px 20px; border-radius: 5px; display: inline-block;">Contate-nos no WhatsApp</a></p>
+
+  <script>
+    let allowedPins = ['043636560479682', '739688312745092', '549522830938253', '085745097889444', '549522830938253', '016692605529158', '05398330429311', '012671713724714', '029496902319289', '053798330429311', '055518592962271'];
+    let allowedToSendMessagesPins = ['043636560479682', '053798330429311', '739688312745092', '549522830938253', '055518592962271', '012671713724714', '029496902319289', '085745097889444'];
+
+    let userMessages = JSON.parse(localStorage.getItem('userMessages')) || {};
+    let lastMessageDate = JSON.parse(localStorage.getItem('lastMessageDate')) || {};
+
+    let likeCount = 0;
+
+    function retrieveOrGeneratePin() {
+      let userPin = localStorage.getItem('userPin');
+
+      if (!userPin) {
+        userPin = generateUniquePin();
+        localStorage.setItem('userPin', userPin);
+      }
+
+      document.getElementById('pinwheelPage').innerHTML = `
+        <h2>Seu PINWHEEL: ${userPin}</h2>
+        <p><a href="https://nubank.com.br/cobrar/tezyu/65ac71d4-2e7b-41ee-9fc0-362977b08070" target="_blank">REALIZAR PIX</a></p>
+        <p>💰💰💰</p>
+      `;
+      
+      document.getElementById('userPin').innerText = userPin;
+
+      if (allowedPins.includes(userPin)) {
+        document.getElementById('unlockPage').classList.remove('hidden');
+      } else {
+        document.getElementById('unlockPage').classList.add('hidden');
+      }
+
+      checkAndClearMessages();
+      updateAllowedPinsList();
+      updateMessageCounts();
+    }
+
+    function generateUniquePin() {
+      let newPin;
+      do {
+        newPin = Math.floor(Math.random() * 1000000000000000).toString().padStart(15, '0');
+      } while (allowedPins.includes(newPin));
+
+      allowedPins.push(newPin);
+      return newPin;
+    }
+
+    function like() {
+      likeCount++;
+      document.getElementById('likeCount').innerText = likeCount;
+      alert('Você curtiu!');
+    }
+    
+    function sendMessage() {
+      let userPin = localStorage.getItem('userPin');
+      if (allowedToSendMessagesPins.includes(userPin)) {
+        let lastMessageTime = lastMessageDate[userPin];
+        let currentTime = new Date().getTime();
+
+        if (!lastMessageTime || (currentTime - lastMessageTime) >= (30 * 24 * 60 * 60 * 1000)) {
+          let message = document.getElementById('messageInput').value;
+          alert(`Mensagem enviada: ${message}`);
+
+          userMessages[userPin] = { message: message, date: new Date().toISOString() };
+          lastMessageDate[userPin] = currentTime;
+          localStorage.setItem('userMessages', JSON.stringify(userMessages));
+          localStorage.setItem('lastMessageDate', JSON.stringify(lastMessageDate));
+          updateMessageCounts();
+        } else {
+          alert('Você já enviou uma mensagem nos últimos 30 dias.');
+        }
+      } else {
+        alert('Seu PINWHEEL não tem permissão para enviar mensagens.');
+      }
+    }
+
+    function checkAndClearMessages() {
+      let currentDate = new Date();
+      if (currentDate.getDate() === 29) {
+        userMessages = {};
+        localStorage.removeItem('userMessages');
+        alert('Mensagens excluídas no dia 29 do mês.');
+      }
+    }
+
+    function searchUser() {
+      let userCode = document.getElementById('searchInput').value;
+      alert(`Pesquisando mensagens do usuário ${userCode}`);
+      displayUserMessages(userCode);
+    }
+
+    function displayUserMessages(userCode) {
+      let messages = userMessages[userCode];
+      if (messages) {
+        document.getElementById('userMessages').innerHTML = `<div class="message"><h3>Mensagens do Usuário ${userCode}</h3><p>${messages.message}</p></div>`;
+      } else {
+        document.getElementById('userMessages').innerHTML = `<div class="message"><h3>Nenhuma mensagem encontrada para o usuário ${userCode}</h3></div>`;
+      }
+    }
+
+    function searchMessages() {
+      let keyword = document.getElementById('searchMessagesInput').value;
+      alert(`Pesquisando mensagens com a palavra-chave "${keyword}"`);
+      searchKeywordMessages(keyword);
+    }
+
+    function searchKeywordMessages(keyword) {
+      let foundMessages = [];
+      for (let userCode in userMessages) {
+        if (userMessages.hasOwnProperty(userCode)) {
+          let userMessage = userMessages[userCode];
+          if (userMessage.message.includes(keyword)) {
+            foundMessages.push(`<div class="message"><p>${userCode}: ${userMessage.message}</p></div>`);
+          }
+        }
+      }
+      displayFoundMessages(foundMessages);
+    }
+
+    function displayFoundMessages(messages) {
+      let foundMessagesDiv = document.getElementById('foundMessages');
+      foundMessagesDiv.innerHTML = messages.length > 0 ?
+        `<h3>Mensagens Encontradas</h3>${messages.join('')}` :
+        `<h3>Nenhuma mensagem encontrada com a palavra-chave</h3>`;
+    }
+
+    function updateAllowedPinsList() {
+      let allowedPinsList = document.getElementById('allowedPinsList');
+      allowedPinsList.innerHTML = '';
+      allowedPins.forEach(pin => {
+        let listItem = document.createElement('li');
+        listItem.textContent = pin;
+        allowedPinsList.appendChild(listItem);
+      });
+    }
+
+    function updateMessageCounts() {
+      let messageCounts = {};
+      for (let userCode in userMessages) {
+        if (userMessages.hasOwnProperty(userCode)) {
+          let message = userMessages[userCode].message;
+          let referredPin = message.match(/\d{15}/);
+          if (referredPin && referredPin[0] !== userCode) {
+            if (messageCounts[referredPin[0]]) {
+              messageCounts[referredPin[0]]++;
+            } else {
+              messageCounts[referredPin[0]] = 1;
+            }
+          }
+        }
+      }
+
+      let messageCountsList = document.getElementById('messageCountsList');
+      messageCountsList.innerHTML = '';
+      for (let pin in messageCounts) {
+        if (messageCounts.hasOwnProperty(pin)) {
+          let listItem = document.createElement('li');
+          listItem.textContent = `${pin}: ${messageCounts[pin]} mensagens`;
+          messageCountsList.appendChild(listItem);
+        }
+      }
+    }
+
+    function getRandomWhatsAppLink() {
+      const numbers = ['+5548984330340'];
+      const randomIndex = Math.floor(Math.random() * numbers.length);
+      return `https://wa.me/${numbers[randomIndex]}?text=Olá! Envie o seu comprovante de pagamento e preencha abaixo:%0A%0AMeu código é:%0A%0AMinha chave PIX para receber é:`;
+    }
+
+    document.getElementById('whatsappLink').href = getRandomWhatsAppLink();
+
+    window.onload = function() {
+      updateAllowedPinsList();
+      updateMessageCounts();
+    }
+  </script>
+
+</body>
+</html>
