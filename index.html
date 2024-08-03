@@ -97,11 +97,10 @@
     <p><a href="https://nubank.com.br/cobrar/tezyu/66a967dc-b24e-4867-ad76-368c97f553e3" target="_blank">REALIZAR PIX</a></p>
     <p>Para enviar mensagens na página de membros, realize o PIX e envie seu PINWHEEL junto com o comprovante de pagamento para a nossa equipe!</p>
     <h4>Aqui você recebe 25% do que pagou sempre que um usuário envia seu código! Convide amigos.</h4>
-    <h4>Informações adicionais:<h4/>
-     
-      <p>•🤓☝️ Você terá acesso à página de membros até o dia 29, e poderá assistir aos videos de modo antecipado.</p>
-      <p>•🫂 Envie uma mensagem escrevendo o código do seu amigo que lhe indicou o site, e seu amigo receberá R$5,00 ao informar a equipe que você enviou mensagem.</p>
-      <p>•♾️ Se você não obteu lucro após 1 mês, contate-nos para reembolsarmos entregando até 3% de juros!</p>
+    <h4>Informações adicionais:</h4>
+    <p>•🤓☝️ Você terá acesso à página de membros até o dia 29, e poderá assistir aos videos de modo antecipado.</p>
+    <p>•🫂 Envie uma mensagem escrevendo o código do seu amigo que lhe indicou o site, e seu amigo receberá R$5,00 ao informar a equipe que você enviou mensagem.</p>
+    <p>•♾️ Se você não obteve lucro após 1 mês, contate-nos para reembolsarmos entregando até 3% de juros!</p>
   </div>
 
   <div id="unlockPage" class="hidden">
@@ -146,7 +145,7 @@
 
   <script>
     let allowedPins = ['043636560479682', '739688312745092', '549522830938253', '085745097889444', '549522830938253', '016692605529158', '05398330429311', '012671713724714', '029496902319289', '053798330429311', '055518592962271'];
-    let allowedToSendMessagesPins = ['043636560479682', '053798330429311', '739688312745092', '549522830938253', '055518592962271', '012671713724714', '029496902319289', '085745097889444'];
+    let allowedToSendMessagesPins = ['043636560479682', '053798330429311', '739688312745092', '549522830938253', '055518592962271', '012671713724714', '029496902319289', '085745097889444', '016692605529158'];
 
     let userMessages = JSON.parse(localStorage.getItem('userMessages')) || {};
     let lastMessageDate = JSON.parse(localStorage.getItem('lastMessageDate')) || {};
@@ -202,7 +201,7 @@
         let lastMessageTime = lastMessageDate[userPin];
         let currentTime = new Date().getTime();
 
-        if (!lastMessageTime || (currentTime - lastMessageTime) >= (30 * 24 * 60 * 60 * 1000)) {
+        if (!lastMessageTime if (!lastMessageTime || (currentTime - lastMessageTime) >= (30 * 24 * 60 * 60 * 1000)) {
           let message = document.getElementById('messageInput').value;
           alert(`Mensagem enviada: ${message}`);
 
